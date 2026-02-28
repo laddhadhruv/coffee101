@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee 101 — Interest Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:      #f5f0e8;
+  --parchment:  #ede5d4;
+  --espresso:   #1c0f07;
+  --brown:      #3d1f0d;
+  --caramel:    #b5732a;
+  --terracotta: #c4623a;
+  --gold:       #c9a84c;
+  --muted:      #7a6652;
+  --f-eyebrow:  9.5px;
+  --f-title:    clamp(26px, 5vw, 40px);
+  --f-lead:     clamp(15px, 2.3vw, 18px);
+  --f-body:     clamp(12.5px, 1.8vw, 14px);
+  --f-meta:     10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  background: #0e0805;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--espresso);
+  overflow: hidden;
+}
+
+/* SLIDE ENGINE */
+.slide {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(12px,3vw,36px) clamp(12px,3vw,36px) 72px;
+  opacity: 0; pointer-events: none;
+  filter: blur(22px); transform: scale(0.97);
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+              filter   0.7s cubic-bezier(0.4,0,0.2,1),
+              transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.slide.active          { opacity:1; pointer-events:all; filter:blur(0); transform:scale(1); }
+.slide.exit-left  { opacity:0; filter:blur(22px); transform:scale(1.03) translateX(-2%); }
+.slide.exit-right { opacity:0; filter:blur(22px); transform:scale(1.03) translateX(2%); }
+
+/* CARD */
+.card {
+  width: 100%; max-width: 800px;
+  background: var(--cream); border-radius: 20px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
+              0 32px 80px rgba(0,0,0,0.8),
+              0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* SHARED TYPOGRAPHY */
+.t-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--f-eyebrow); font-weight: 600;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--caramel);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.t-eyebrow::after { content:''; height:1.5px; background:var(--caramel); width:28px; opacity:0.5; }
+.t-eyebrow.on-dark { color: rgba(201,168,76,0.75); }
+.t-eyebrow.on-dark::after { background: rgba(201,168,76,0.4); }
+
+.t-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: var(--f-title); font-weight: 700; line-height: 1.1;
+  color: var(--brown); margin-bottom: 10px;
+}
+.t-heading em    { font-style:italic; color:var(--caramel); font-weight:400; }
+.t-heading.light { color: var(--cream); }
+.t-heading.light em { color: var(--gold); }
+
+.t-lead {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: var(--f-lead); color: var(--muted); line-height: 1.65;
+  margin-bottom: 22px;
+}
+.t-lead.light { color: rgba(245,240,232,0.55); }
+
+.t-meta {
+  font-family: 'DM Sans', sans-serif; font-size: var(--f-meta);
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold); display: block; margin-bottom: 4px;
+}
+
+.divider { height: 5px; background: linear-gradient(90deg, var(--caramel), var(--terracotta), var(--gold), var(--caramel)); }
+
+/* ─── SLIDE 1: COVER ─── */
+.s-cover {
+  background: var(--espresso);
+  padding: clamp(32px,5.5vw,60px) clamp(28px,5.5vw,60px);
+  height: clamp(420px, calc(100vh - 130px), 580px);
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden;
+}
+.cover-orb {
+  position: absolute; right: -100px; top: -100px;
+  width: 380px; height: 380px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(201,168,76,0.1), transparent 70%);
+  border: 1px solid rgba(201,168,76,0.14); pointer-events: none;
+}
+.cover-orb::after {
+  content:''; position:absolute; inset:36px; border-radius:50%;
+  border: 1px solid rgba(201,168,76,0.07);
+}
+.cover-top {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  flex-wrap:wrap; gap:12px; position:relative; z-index:1;
+}
+.cover-tag {
+  font-family: 'DM Sans', sans-serif; font-size: var(--f-eyebrow); font-weight: 500;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gold); padding: 6px 14px;
+  border: 1px solid rgba(201,168,76,0.35); border-radius: 40px;
+}
+.cover-note {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(11px,1.7vw,13px); color: rgba(245,240,232,0.35);
+  text-align: right; line-height: 1.6;
+}
+.cover-headline { position:relative; z-index:1; margin-top:16px; }
+.cover-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px,9vw,82px); font-weight:700;
+  color: var(--cream); line-height: 0.92; letter-spacing: -0.015em;
+  display: flex; flex-direction: column;
+}
+.cover-h1 em {
+  font-style:italic; color:var(--gold);
+  font-size:0.6em; margin-top:6px; font-weight:400;
+}
+.cover-sub {
+  font-family: 'Cormorant Garamond', serif; font-style:italic;
+  font-size: clamp(14px,2.2vw,18px);
+  color: rgba(245,240,232,0.5); margin-top:16px; line-height:1.5;
+}
+.cover-bottom {
+  position:relative; z-index:1;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  flex-wrap:wrap; gap:16px; margin-top:32px;
+}
+.cover-meta { display:flex; gap:clamp(16px,3.5vw,32px); flex-wrap:wrap; }
+.cover-meta-item { display:flex; flex-direction:column; gap:2px; }
+.cover-meta-item .t-meta { margin-bottom:2px; }
+.cover-meta-item span {
+  font-family:'Playfair Display', serif;
+  font-size:clamp(12px,1.8vw,15px); color:var(--cream);
+}
+.badge {
+  padding: 9px 20px; border-radius: 40px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--f-eyebrow); letter-spacing: 0.16em;
+  text-transform: uppercase; font-weight: 500;
+  cursor: pointer; border: none;
+}
+.badge-terracotta { background: var(--terracotta); color: var(--cream); }
+.badge-gold { background: var(--gold); color: var(--espresso); }
+
+/* ─── SLIDE 2: ABOUT ─── */
+.s-about {
+  padding: clamp(28px,4.5vw,48px) clamp(24px,4.5vw,52px);
+  height: clamp(420px, calc(100vh - 130px), 580px);
+  display: flex; flex-direction: column; justify-content: center;
+  background: var(--cream);
+}
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-top: 16px;
+}
+@media (max-width:520px) { .about-grid { grid-template-columns:1fr; } }
+.about-card {
+  background: var(--parchment); border-radius: 14px;
+  padding: 18px 16px; position: relative; overflow: hidden;
+}
+.about-card-num {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(52px,7vw,68px); line-height:1;
+  color: var(--caramel); opacity: 0.18;
+  position: absolute; right: 10px; bottom: -8px;
+  user-select: none; pointer-events: none;
+}
+.about-card-label {
+  font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--caramel); margin-bottom: 8px;
+}
+.about-card-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(13px,1.9vw,15px); color: var(--brown);
+  line-height: 1.6;
+}
+.about-card-text em { color: var(--caramel); font-style: italic; }
+
+/* ─── SLIDE 3: DETAILS ─── */
+.s-details-dark {
+  background: #110a04;
+  padding: clamp(28px,4.5vw,48px) clamp(24px,4.5vw,52px);
+  height: clamp(420px, calc(100vh - 130px), 580px);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.detail-row {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 12px; margin: 16px 0;
+}
+@media (max-width:480px) { .detail-row { grid-template-columns:1fr; } }
+.detail-pill {
+  background: rgba(245,240,232,0.04);
+  border: 1px solid rgba(245,240,232,0.08);
+  border-radius: 14px; padding: 16px;
+}
+.detail-pill .t-meta { margin-bottom: 6px; }
+.detail-pill-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(13px,1.9vw,15.5px); color: rgba(245,240,232,0.7);
+  line-height: 1.6;
+}
+.curriculum {
+  border-left: 2px solid var(--terracotta);
+  padding: 10px 16px;
+  background: rgba(196,98,58,0.07);
+  border-radius: 0 10px 10px 0;
+}
+.curriculum p {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(13px,1.9vw,15.5px);
+  color: rgba(245,240,232,0.7); line-height: 1.75;
+}
+.curriculum p strong { color: rgba(245,240,232,0.9); font-style: normal; font-weight: 400; }
+.next-btn {
+  align-self: flex-end; margin-top: 12px;
+  background: var(--terracotta); color: var(--cream);
+  border: none; border-radius: 40px; cursor: pointer;
+  padding: 10px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: var(--f-eyebrow); letter-spacing: 0.18em;
+  text-transform: uppercase; font-weight: 500;
+  transition: background 0.2s;
+}
+.next-btn:hover { background: var(--caramel); }
+
+/* ─── SLIDE 4: FORM ─── */
+.s-form {
+  background: var(--cream);
+  height: clamp(420px, calc(100vh - 130px), 580px);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.form-header {
+  padding: clamp(20px,3.5vw,36px) clamp(24px,4.5vw,52px) 12px;
+  flex-shrink: 0;
+}
+.form-scroll {
+  flex: 1; min-height: 0;
+  overflow-y: auto; padding: 0 clamp(24px,4.5vw,52px) clamp(20px,3vw,32px);
+  scrollbar-width: thin; scrollbar-color: var(--caramel) transparent;
+}
+.form-scroll::-webkit-scrollbar { width: 4px; }
+.form-scroll::-webkit-scrollbar-thumb { background: var(--caramel); border-radius: 4px; }
+
+.q-block { margin-bottom: 18px; }
+.q-label {
+  font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+  color: var(--brown); margin-bottom: 8px; display: block; line-height: 1.4;
+}
+.q-sub {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 12px; color: var(--muted); margin-top: -4px; margin-bottom: 8px; display: block;
+}
+input[type="text"], input[type="email"], textarea {
+  width: 100%; padding: 9px 12px;
+  background: var(--parchment);
+  border: 1.5px solid rgba(181,115,42,0.2); border-radius: 10px;
+  font-family: 'Cormorant Garamond', serif; font-size: 14px;
+  color: var(--brown); outline: none;
+  transition: border-color 0.2s;
+}
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+  border-color: var(--caramel);
+}
+textarea { resize: vertical; min-height: 64px; }
+
+/* iOS: prevent zoom on input focus */
+@media (max-width: 767px) {
+  input[type="text"], input[type="email"], textarea {
+    font-size: 16px;
+  }
+  .nav-btn { width: 44px; height: 44px; font-size: 16px; }
+  .cover-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .cover-meta { gap: 14px; }
+
+  /* On mobile, cards can grow and scroll — no fixed height clipping */
+  .s-cover, .s-about, .s-details-dark {
+    height: auto;
+    min-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* The slide wrapper itself also needs to allow the card to scroll */
+  .slide {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .card {
+    /* Let card be as tall as its content on mobile */
+    overflow: visible;
+  }
+}
+
+/* Pill selects */
+.pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill-opt { display: none; }
+.pill-opt + label {
+  cursor: pointer; padding: 6px 14px;
+  border: 1.5px solid rgba(181,115,42,0.25); border-radius: 40px;
+  font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 500;
+  color: var(--muted); transition: all 0.15s;
+  user-select: none;
+}
+.pill-opt:checked + label {
+  background: var(--caramel); color: var(--cream);
+  border-color: var(--caramel);
+}
+
+/* Star rating */
+.star-group { display: flex; gap: 4px; flex-direction: row-reverse; justify-content: flex-end; }
+.star-opt { display: none; }
+.star-opt + label {
+  font-size: 22px; cursor: pointer; color: rgba(181,115,42,0.2);
+  transition: color 0.1s;
+}
+.star-opt:checked ~ label,
+.star-group:hover .star-opt + label:hover,
+.star-group:hover .star-opt + label:hover ~ label { color: var(--gold); }
+.star-opt:checked + label { color: var(--gold); }
+
+/* Two-col row for name/email */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width:480px) { .two-col { grid-template-columns:1fr; } }
+
+.form-submit {
+  margin-top: 20px; width: 100%;
+  background: var(--terracotta); color: var(--cream); border: none;
+  border-radius: 40px; cursor: pointer; padding: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: var(--f-eyebrow);
+  letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+  transition: background 0.2s;
+}
+.form-submit:hover { background: var(--caramel); }
+
+/* Success state */
+.success-state {
+  display: none; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 40px 32px; flex: 1;
+}
+.success-state.visible { display: flex; }
+.success-icon {
+  font-size: 48px; margin-bottom: 16px;
+}
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px,4vw,32px); font-weight: 700;
+  color: var(--brown); margin-bottom: 10px;
+}
+.success-title em { color: var(--caramel); font-weight:400; }
+.success-body {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(15px,2vw,17px); color: var(--muted); line-height: 1.65;
+}
+
+/* WhatsApp button */
+.wa-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 20px; padding: 13px 28px; border-radius: 40px;
+  background: #25D366; color: #fff; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: var(--f-eyebrow);
+  letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+  text-decoration: none; transition: background 0.2s;
+}
+.wa-btn:hover { background: #1ebe5d; }
+.wa-btn svg { flex-shrink: 0; }
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  padding: 18px; z-index: 100;
+}
+.nav-btn {
+  background: rgba(245,240,232,0.06); border: 1px solid rgba(245,240,232,0.12);
+  color: rgba(245,240,232,0.45); border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; font-size: 14px;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:disabled { opacity: 0.2; cursor: default; }
+.nav-btn:not(:disabled):hover { background: rgba(245,240,232,0.12); color: rgba(245,240,232,0.8); }
+.nav-dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(245,240,232,0.18); cursor: pointer; transition: all 0.3s;
+}
+.dot.active { background: var(--gold); transform: scale(1.25); }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER -->
+<div class="slide active" id="slide-0">
+  <div class="card">
+    <div class="s-cover">
+      <div class="cover-orb"></div>
+      <div class="cover-top">
+        <div class="cover-tag">Questrom Tastings</div>
+        <div class="cover-note">
+          Because clearly we don't<br>take enough classes already.
+        </div>
+      </div>
+
+      <div class="cover-headline">
+        <div class="cover-h1">Coffee
+          <em>101.</em>
+        </div>
+        <p class="cover-sub">You've survived IS823, QST843, and whatever else is on your plate.<br>
+          This one ends with a Cortado — and no final exam.</p>
+      </div>
+
+      <div class="cover-bottom">
+        <div class="cover-meta">
+          <div class="cover-meta-item">
+            <span class="t-meta">Format</span>
+            <span>Workshop · Tasting</span>
+          </div>
+          <div class="cover-meta-item">
+            <span class="t-meta">Who</span>
+            <span>Novice · Beginners · Intermediate</span>
+          </div>
+        </div>
+        <button class="badge badge-terracotta" onclick="navigate(1)">Tell me more →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: ABOUT -->
+<div class="slide" id="slide-1">
+  <div class="card">
+    <div class="s-about">
+      <div>
+        <div class="t-eyebrow">The Setup</div>
+        <h2 class="t-heading">Who is this <em>actually</em> for?</h2>
+        <p class="t-lead">50+ total attendees later, one question keeps coming up:<br><em>"Okay, but where do I even start?"</em> — Let's answer that.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-label">Ideal Attendee</div>
+          <div class="about-card-text">You drink coffee daily but couldn't explain why your cup tastes burnt. You're curious, not a snob — and you've never heard of a <em>pourover</em> outside a menu.</div>
+          <div class="about-card-num">1</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-label">Also You</div>
+          <div class="about-card-text">You've attended one of my tastings and thought "I wish I knew more." Or you've never come but always wanted to. Either way — <em>you belong here.</em></div>
+          <div class="about-card-num">2</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-label">Not Ideal</div>
+          <div class="about-card-text">If you already know your grind ratios and dial in espresso before 7am, you might find this a bit remedial. We still love you. Please come anyway and be patient.</div>
+          <div class="about-card-num">3</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-label">The Goal</div>
+          <div class="about-card-text">Leave knowing exactly how to make a great cup at home — and why it works. No jargon, no gatekeeping, just <em>really good coffee.</em></div>
+          <div class="about-card-num">4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: DETAILS -->
+<div class="slide" id="slide-2">
+  <div class="card">
+    <div class="s-details-dark">
+      <div>
+        <div class="t-eyebrow on-dark">What to Expect</div>
+        <h2 class="t-heading light">The <em>details.</em></h2>
+
+        <div class="curriculum">
+          <p>We'll cover bean origins & roast levels, why the grinder matters more than the machine, and troubleshooting a bad cup. We'll also have a live brewing demo, and finish off with a curated tasting.</p>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-pill">
+            <span class="t-meta">Duration</span>
+            <div class="detail-pill-val">~45 minutes<br><span style="font-size:11px;color:rgba(245,240,232,0.35);font-family:'DM Sans',sans-serif;font-style:normal;">including tasting + Q&A</span></div>
+          </div>
+          <div class="detail-pill">
+            <span class="t-meta">Cost</span>
+            <div class="detail-pill-val">TBD — your input decides</div>
+          </div>
+          <div class="detail-pill">
+            <span class="t-meta">How to Contribute</span>
+            <div class="detail-pill-val">Bring a snack, a friend, or coffee beans!</div>
+          </div>
+          <div class="detail-pill">
+            <span class="t-meta">Location</span>
+            <div class="detail-pill-val">TBD<br><span style="font-size:11px;color:rgba(245,240,232,0.35);font-family:'DM Sans',sans-serif;font-style:normal;">based on headcount</span></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-btn" onclick="navigate(1)">Fill out the form →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: FORM -->
+<div class="slide" id="slide-3">
+  <div class="card">
+    <div class="s-form">
+      <div class="form-header">
+        <div class="t-eyebrow">Interest Form</div>
+        <h2 class="t-heading">Help us <em>curate this.</em></h2>
+      </div>
+      <div class="divider"></div>
+
+      <!-- Success state -->
+      <div class="success-state" id="success">
+        <div class="success-icon">☕</div>
+        <div class="success-title">Almost <em>done.</em></div>
+        <p class="success-body">Tap below to send your responses directly to me on WhatsApp — takes two seconds.</p>
+        <a id="wa-link" class="wa-btn" href="#" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Send via WhatsApp
+        </a>
+      </div>
+
+      <!-- Form -->
+      <div class="form-scroll" id="form-wrap">
+        <form id="interest-form" onsubmit="handleSubmit(event)">
+
+          <!-- Name + Email -->
+          <div class="q-block" style="margin-top:18px;">
+            <div class="two-col">
+              <div>
+                <label class="q-label" for="name">Your name</label>
+                <input type="text" id="name" placeholder="First name is fine" required>
+              </div>
+              <div>
+                <label class="q-label" for="email">Email</label>
+                <input type="email" id="email" placeholder="BU email preferred" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date preference -->
+          <div class="q-block">
+            <label class="q-label">Which date works better for you?</label>
+            <span class="q-sub">Both are tentative — just helps us plan.</span>
+            <div class="pill-group">
+              <input type="radio" class="pill-opt" name="date" id="d1" value="mar20"><label for="d1">March 20th</label>
+              <input type="radio" class="pill-opt" name="date" id="d2" value="mar22"><label for="d2">March 22nd</label>
+              <input type="radio" class="pill-opt" name="date" id="d3" value="either"><label for="d3">Either works</label>
+              <input type="radio" class="pill-opt" name="date" id="d4" value="neither"><label for="d4">Neither works</label>
+            </div>
+          </div>
+
+          <!-- Interest level -->
+          <div class="q-block">
+            <label class="q-label">How keen are you?</label>
+            <span class="q-sub">1 = mildly curious, 5 = already cleared my calendar</span>
+            <div class="star-group">
+              <input type="radio" class="star-opt" name="interest" id="s5" value="5"><label for="s5">★</label>
+              <input type="radio" class="star-opt" name="interest" id="s4" value="4"><label for="s4">★</label>
+              <input type="radio" class="star-opt" name="interest" id="s3" value="3"><label for="s3">★</label>
+              <input type="radio" class="star-opt" name="interest" id="s2" value="2"><label for="s2">★</label>
+              <input type="radio" class="star-opt" name="interest" id="s1" value="1"><label for="s1">★</label>
+            </div>
+          </div>
+
+          <!-- Willingness to pay -->
+          <div class="q-block">
+            <label class="q-label">What feels fair to you?</label>
+            <span class="q-sub">Coffee, equipment, and time go into this — be honest.</span>
+            <div class="pill-group" id="price-pills">
+              <input type="radio" class="pill-opt" name="price" id="p0" value="free"><label for="p0">Free is ideal</label>
+              <input type="radio" class="pill-opt" name="price" id="p1" value="10-15"><label for="p1">$10–15</label>
+              <input type="radio" class="pill-opt" name="price" id="p2" value="20+snacks"><label for="p2">$20+ if there are complementary snacks</label>
+              <input type="radio" class="pill-opt" name="price" id="p_other" value="other" onchange="toggleOtherField('price-other-wrap', this)"><label for="p_other">Other suggestions</label>
+            </div>
+            <div id="price-other-wrap" style="display:none; margin-top:8px;">
+              <input type="text" id="price-other" placeholder="What feels right to you?">
+            </div>
+          </div>
+
+          <!-- Value-adds -->
+          <div class="q-block">
+            <label class="q-label">What would make this a no-brainer for you?</label>
+            <span class="q-sub">Pick all that apply.</span>
+            <div class="pill-group">
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v1" value="demo"><label for="v1">Live brewing demo</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v2" value="samples"><label for="v2">Take-home bean samples</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v3" value="notes"><label for="v3">Printed tasting notes</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v4" value="qa"><label for="v4">Open Q&A</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v5" value="recs"><label for="v5">Gear recommendations</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v6" value="food"><label for="v6">Food pairings</label>
+              <input type="checkbox" class="pill-opt" name="valueadd" id="v_other" value="other" onchange="toggleOtherField('valueadd-other-wrap', this)"><label for="v_other">Other suggestions</label>
+            </div>
+            <div id="valueadd-other-wrap" style="display:none; margin-top:8px;">
+              <input type="text" id="valueadd-other" placeholder="What else would win you over?">
+            </div>
+          </div>
+
+          <!-- Dealbreakers -->
+          <div class="q-block">
+            <label class="q-label">Any dealbreakers?</label>
+            <span class="q-sub">Schedule conflict, cost, format — anything that'd make you skip it.</span>
+            <input type="text" id="dealbreaker" placeholder="e.g. mornings, cost over $X, too far from campus…">
+          </div>
+
+          <!-- Anything else -->
+          <div class="q-block">
+            <label class="q-label">Anything else you want me to know?</label>
+            <textarea id="misc" placeholder="Dietary restrictions, content requests, unsolicited opinions — all welcome."></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">Submit interest →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn" id="prev-btn" onclick="navigate(-1)" disabled>←</button>
+  <div class="nav-dots">
+    <div class="dot active" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+    <div class="dot" onclick="goTo(3)"></div>
+  </div>
+  <button class="nav-btn" id="next-btn" onclick="navigate(1)">→</button>
+</nav>
+
+<script>
+// ── CONFIG: no phone number needed — WhatsApp will let the user pick the recipient ──
+// If you want responses sent directly to your number, replace the wa.me URL below with:
+// https://wa.me/YOUR_NUMBER_WITH_COUNTRY_CODE?text=...
+
+const slides  = document.querySelectorAll('.slide');
+const dots    = document.querySelectorAll('.dot');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+let current = 0, animating = false;
+
+function goTo(index) {
+  if (index === current || animating) return;
+  animating = true;
+  const prev = current;
+  const goingDown = index > prev;
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add(goingDown ? 'exit-left' : 'exit-right');
+  current = index;
+  slides[current].classList.add('active');
+  setTimeout(() => {
+    slides[prev].classList.remove('exit-left','exit-right');
+    animating = false;
+  }, 750);
+  dots.forEach((d,i) => d.classList.toggle('active', i === current));
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === slides.length - 1;
+}
+
+function navigate(dir) {
+  goTo(Math.max(0, Math.min(slides.length - 1, current + dir)));
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'ArrowLeft')  navigate(-1);
+});
+
+// Touch swipe — horizontal only for slide navigation.
+// Vertical is left entirely to native scroll so content can be read freely.
+let tx = 0, ty = 0;
+document.addEventListener('touchstart', e => {
+  tx = e.touches[0].clientX;
+  ty = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  // Only act on clearly horizontal swipes (dominant axis + minimum distance)
+  if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 50) {
+    navigate(dx < 0 ? 1 : -1);
+  }
+}, { passive: true });
+
+function toggleOtherField(wrapId, checkbox) {
+  const wrap = document.getElementById(wrapId);
+  if (checkbox.type === 'radio') {
+    wrap.style.display = checkbox.checked ? 'block' : 'none';
+    checkbox.closest('form').querySelectorAll(`input[name="${checkbox.name}"]`).forEach(r => {
+      if (r !== checkbox) r.addEventListener('change', () => { wrap.style.display = 'none'; }, { once: true });
+    });
+  } else {
+    wrap.style.display = checkbox.checked ? 'block' : 'none';
+  }
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const f = document.getElementById('interest-form');
+
+  const name      = f.querySelector('#name').value.trim();
+  const email     = f.querySelector('#email').value.trim();
+  const dateVal   = [...f.querySelectorAll('input[name="date"]')].find(r => r.checked)?.value || '—';
+  const interest  = [...f.querySelectorAll('input[name="interest"]')].find(r => r.checked)?.value || '—';
+  const priceEl   = [...f.querySelectorAll('input[name="price"]')].find(r => r.checked);
+  const price     = priceEl ? (priceEl.value === 'other' ? (f.querySelector('#price-other').value || 'Other') : priceEl.value) : '—';
+  const valueAdds = [...f.querySelectorAll('input[name="valueadd"]:checked')].map(c => {
+    if (c.value === 'other') return f.querySelector('#valueadd-other').value || 'Other';
+    return c.parentElement.querySelector(`label[for="${c.id}"]`)?.textContent || c.value;
+  }).join(', ') || '—';
+  const dealbreak = f.querySelector('#dealbreaker').value.trim() || '—';
+  const misc      = f.querySelector('#misc').value.trim() || '—';
+
+  const dateLabels = { mar20:'March 20th', mar22:'March 22nd', either:'Either works', neither:'Neither works' };
+
+  const msg = [
+    `☕ *Coffee 101 — Interest Form*`,
+    ``,
+    `*Name:* ${name}`,
+    `*Email:* ${email}`,
+    `*Date preference:* ${dateLabels[dateVal] || dateVal}`,
+    `*Interest level:* ${'★'.repeat(Number(interest) || 0)} (${interest}/5)`,
+    `*Willing to pay:* ${price}`,
+    `*Value-adds:* ${valueAdds}`,
+    `*Dealbreakers:* ${dealbreak}`,
+    `*Anything else:* ${misc}`,
+  ].join('\n');
+
+  document.getElementById('wa-link').href =
+    `https://wa.me/917073043778?text=${encodeURIComponent(msg)}`;
+
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('success').classList.add('visible');
+  nextBtn.disabled = true;
+}
+</script>
+</body>
+</html>
