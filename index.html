@@ -200,7 +200,7 @@ html, body {
 
 /* ─── SLIDE 3: DETAILS ─── */
 .s-details-dark {
-  background: #110a04;
+  background: var(--cream);
   padding: clamp(28px,4.5vw,48px) clamp(24px,4.5vw,52px);
   height: clamp(420px, calc(100vh - 130px), 580px);
   display: flex; flex-direction: column; justify-content: space-between;
@@ -211,29 +211,29 @@ html, body {
 }
 @media (max-width:480px) { .detail-row { grid-template-columns:1fr; } }
 .detail-pill {
-  background: rgba(245,240,232,0.04);
-  border: 1px solid rgba(245,240,232,0.08);
+  background: var(--parchment);
+  border: 1px solid rgba(181,115,42,0.12);
   border-radius: 14px; padding: 16px;
 }
 .detail-pill .t-meta { margin-bottom: 6px; }
 .detail-pill-val {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: clamp(13px,1.9vw,15.5px); color: rgba(245,240,232,0.7);
+  font-size: clamp(13px,1.9vw,15.5px); color: var(--brown);
   line-height: 1.6;
 }
 .curriculum {
   border-left: 2px solid var(--terracotta);
   padding: 10px 16px;
-  background: rgba(196,98,58,0.07);
+  background: rgba(196,98,58,0.06);
   border-radius: 0 10px 10px 0;
 }
 .curriculum p {
   font-family: 'Cormorant Garamond', serif; font-style: italic;
   font-size: clamp(13px,1.9vw,15.5px);
-  color: rgba(245,240,232,0.7); line-height: 1.75;
+  color: var(--brown); line-height: 1.75;
 }
-.curriculum p strong { color: rgba(245,240,232,0.9); font-style: normal; font-weight: 400; }
+.curriculum p strong { color: var(--espresso); font-style: normal; font-weight: 400; }
 .next-btn {
   align-self: flex-end; margin-top: 12px;
   background: var(--terracotta); color: var(--cream);
@@ -483,8 +483,8 @@ textarea { resize: vertical; min-height: 64px; }
   <div class="card">
     <div class="s-details-dark">
       <div>
-        <div class="t-eyebrow on-dark">What to Expect</div>
-        <h2 class="t-heading light">The <em>details.</em></h2>
+        <div class="t-eyebrow">What to Expect</div>
+        <h2 class="t-heading">The <em>details.</em></h2>
 
         <div class="curriculum">
           <p>We'll cover bean origins & roast levels, why the grinder matters more than the machine, and troubleshooting a bad cup. We'll also have a live brewing demo, and finish off with a curated tasting.</p>
@@ -493,7 +493,7 @@ textarea { resize: vertical; min-height: 64px; }
         <div class="detail-row">
           <div class="detail-pill">
             <span class="t-meta">Duration</span>
-            <div class="detail-pill-val">~45 minutes<br><span style="font-size:11px;color:rgba(245,240,232,0.35);font-family:'DM Sans',sans-serif;font-style:normal;">including tasting + Q&A</span></div>
+            <div class="detail-pill-val">~45 minutes<br><span style="font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-style:normal;">including tasting + Q&A</span></div>
           </div>
           <div class="detail-pill">
             <span class="t-meta">Cost</span>
@@ -505,7 +505,7 @@ textarea { resize: vertical; min-height: 64px; }
           </div>
           <div class="detail-pill">
             <span class="t-meta">Location</span>
-            <div class="detail-pill-val">TBD<br><span style="font-size:11px;color:rgba(245,240,232,0.35);font-family:'DM Sans',sans-serif;font-style:normal;">based on headcount</span></div>
+            <div class="detail-pill-val">TBD<br><span style="font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-style:normal;">based on headcount</span></div>
           </div>
         </div>
       </div>
